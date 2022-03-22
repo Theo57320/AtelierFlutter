@@ -11,6 +11,7 @@ class  AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  bool _isSecret = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -66,9 +67,34 @@ class _AuthScreenState extends State<AuthScreen> {
                         ),
                       ),
                      ),
-                     SizedBox(height: 10.0
+                     SizedBox(height: 10.0),
+                     TextFormField(
+                       obscureText: _isSecret,
+                    decoration: InputDecoration(
+                      suffixIcon: InkWell(
+                        onTap : () => 
+                           setState(() => _isSecret = !_isSecret),
+                        child: Icon(
+                        !_isSecret 
+                        ? Icons.visibility
+                        : Icons.visibility_off),
+                      ),
+                      hintText: 'Password',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(0.0),
+                        borderSide: BorderSide(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(0.0),
+                      borderSide: BorderSide(
+                        color: Colors.grey
+                          ),
+                        ),
+                      ),
                      ),
-                     
+                     SizedBox(height: 10.0,),
                      RaisedButton(
                        color: Theme.of(context).primaryColor,
                        elevation: 0,
@@ -88,7 +114,7 @@ class _AuthScreenState extends State<AuthScreen> {
                        color: Theme.of(context).primaryColor,
                        elevation: 0,
                        padding: EdgeInsets.symmetric(vertical: 15.0),
-                       onPressed: () =>launch('https://docs.flutter.io/flutter/services/UrlLauncher-class.html%27'),
+                       onPressed: () =>launch('http://google.com'),
                        child:Text(
                           'Créer un comte'.toUpperCase(),
                           style: TextStyle(
