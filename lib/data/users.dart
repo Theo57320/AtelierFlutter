@@ -6,18 +6,13 @@ import 'package:flutter/foundation.dart';
 import 'package:reunionou/models/user.dart';
 import 'package:http/http.dart' as http;
 
-Future<List<User>> fetchUser(http.Client client) async {
-  var _authUri = 'http://docketu.iutnc.univ-lorraine.fr:62360/users';
-
+Future<User> fetchUser(http.Client client) async {
+  var _authUri = 'http://docketu.iutnc.univ-lorraine.fr:62360/auth';
+  String basicAuth ='Basic ' + base64Encode(utf8.encode('$email:$password'));
   var response = await Dio().get(
     _authUri,
     options: Options(
-      headers: <String, String>{
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-        'Authorization':
-            'Bearer 2a17020d2ec1739c843daa114ce928accc74f86192b3d604560026a2a6d62c37',
-      },
+      headers: <String, String>{'authorization': basicAuth}
     ),
   );
   print(response.statusCode);
