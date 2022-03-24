@@ -6,6 +6,7 @@ class User {
   final String sexe;
   final String password;
   final String token;
+  final String dateConnexion;
 
   const User({
     required this.mail,
@@ -15,6 +16,7 @@ class User {
     required this.sexe,
     required this.password,
     required this.token,
+    required this.dateConnexion,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -25,6 +27,7 @@ class User {
         prenom: json['prenom'],
         sexe: json['sexe'],
         password: json['password'],
-        token: json['token']);
+        token: json['token'],
+        dateConnexion: json['dateConnexion']);
   }
 }
