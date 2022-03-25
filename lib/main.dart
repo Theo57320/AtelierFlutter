@@ -10,6 +10,7 @@ import 'package:reunionou/screens/authentification.dart';
 import 'package:reunionou/screens/home_page.dart';
 import 'package:http/http.dart' as http;
 
+import 'screens/event_create.dart';
 import 'screens/event_map.dart';
 
 void main() {
@@ -42,6 +43,7 @@ class MyApp extends StatelessWidget {
           // When navigating to the "/" route, build the FirstScreen widget.
           '/event_map': (context) => EventMap(),
           '/authentification': (context) => AuthScreen(),
+          '/event_create': (context) => EventCreate(),
           // When navigating to the "/second" route, build the SecondScreen widget.
         },
         initialRoute: '/authentification',

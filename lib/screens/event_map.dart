@@ -1,13 +1,93 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import 'package:marker_icon/marker_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:reunionou/data/users_collection.dart';
+import 'package:reunionou/data/api_call.dart';
 
-class EventMap extends StatelessWidget {
+const maxMarkersCount = 5000;
+
+class EventMap extends StatefulWidget {
   EventMap({Key? key}) : super(key: key);
   final latLng = LatLng(51.5, -0.09);
+
+  @override
+  _ManyMarkersPageState createState() => _ManyMarkersPageState();
+}
+
+class _ManyMarkersPageState extends State<EventMap> {
+  List<Marker> allMarkers = [];
+  List<ListTile> allMessages = [];
+  String libelle = '';
+  double doubleInRange(Random source, num start, num end) =>
+      source.nextDouble() * (end - start) + start;
+
+  generateComments() {
+    Future.microtask(() {
+      for (var element in UserCollection.messages) {
+        allMessages.add(
+          ListTile(
+            leading: Icon(Icons.map),
+            title: Text('Map'),
+          ),
+        );
+      }
+    });
+  }
+
+  @override
+  void initState() {
+    generateComments();
+    Future.microtask(() {
+      for (var element in UserCollection.marker) {
+        print('test');
+        allMarkers.add(
+          Marker(
+              point: LatLng(
+                  double.parse(element['lat']), double.parse(element['long'])),
+              builder: (BuildContext ctx) {
+                return Consumer<UserCollection>(
+                  builder: (context, userCollection, child) {
+                    return GestureDetector(
+                      onTap: () {
+                        hideWidget();
+                        userCollection.setLibelleLieu(element['libelle_lieu']);
+                        userCollection
+                            .setlibelleEvent(element['libelle_event']);
+                        userCollection.setHoraireEvent(element['horaire']);
+                        userCollection.setDateEvent(element['date']);
+                        userCollection.setIdEvent(element['id']);
+                        ApiCall.getComment(userCollection.id_event)
+                            .then((value) {
+                          print(value);
+                        });
+                      },
+                      child: Icon(
+                        Icons.circle,
+                        color: Colors.red,
+                        size: 12.0,
+                      ),
+                    );
+                  },
+                );
+              }),
+        );
+        print(allMarkers);
+      }
+      setState(() {});
+    });
+  }
+
+  bool _canShowButton = false;
+  void hideWidget() {
+    setState(() {
+      _canShowButton = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<UserCollection>(builder: (context, userCollection, child) {
@@ -19,72 +99,89 @@ class EventMap extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: <Widget>[
                 Expanded(
-                    child: FlutterMap(
-                  options: MapOptions(
-                    center: LatLng(51.5, -0.09),
-                    zoom: 13.0,
-                  ),
-                  layers: [
-                    TileLayerOptions(
-                      urlTemplate:
-                          "https://atlas.microsoft.com/map/tile/png?api-version=1&layer=basic&style=main&tileSize=256&view=Auto&zoom={z}&x={x}&y={y}&subscription-key={subscriptionKey}",
-                      additionalOptions: {
-                        'subscriptionKey':
-                            'NNknHnBvKJ-o0gVn_Dw2O_V39021fJexZyJTJHjZnPM'
-                      },
-                    ),
-                    MarkerLayerOptions(
-                      markers: [
-                        Marker(
-                          width: 80.0,
-                          height: 80.0,
-                          point: LatLng(51.5, -0.09),
-                          builder: (ctx) => const Icon(
-                            Icons.pin_drop,
-                            color: Colors.red,
-                            size: 50.0,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                )),
+                    child: Container(
+                        width: double.infinity,
+                        height: 300,
+                        child: FlutterMap(
+                            options: MapOptions(
+                              center: LatLng(50.5, -0.09),
+                              zoom: 5.0,
+                            ),
+                            layers: [
+                              TileLayerOptions(
+                                urlTemplate:
+                                    'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+                                subdomains: ['a', 'b', 'c'],
+                              ),
+                              MarkerLayerOptions(
+                                markers: allMarkers,
+                              )
+                            ]))),
                 Container(
                     alignment: Alignment.center,
-                    height: 350,
                     color: Colors.blue,
                     child: Column(children: <Widget>[
-                      const Text('\n'),
-                      const Text(
-                        'Libelle_event \n\n RV le date à Heure \n\n Lieu_event\n',
-                        style: TextStyle(
-                            color: Color.fromARGB(255, 0, 0, 0),
-                            backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.bold),
-                      ),
+                      !_canShowButton
+                          ? const SizedBox.shrink()
+                          : Text(
+                              userCollection.libelleLieu +
+                                  "\n" +
+                                  userCollection.libelle_event +
+                                  "\n" +
+                                  userCollection.horaire +
+                                  "\n" +
+                                  userCollection.date,
+                              style: TextStyle(
+                                  color: Color.fromARGB(255, 0, 0, 0),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                      !_canShowButton
+                          ? const SizedBox.shrink()
+                          : ElevatedButton(
+                              onPressed: () {
+                                ApiCall.getVenir(userCollection.id_event);
+                                //     .then((value) {
+
+                                // });
+                                // userCollection.setParticipe_event(
+                                //     true, UserCollection.prenom);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.green,
+                              ),
+                              child: const Text('Je viens'),
+                            ),
+                      !_canShowButton
+                          ? const SizedBox.shrink()
+                          : ElevatedButton(
+                              onPressed: () {
+                                ApiCall.getVenir(UserCollection.id)
+                                    .then((value) {
+                                  print(value);
+                                });
+
+                                // userCollection.setParticipe_event(
+                                //     false, UserCollection.prenom);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                primary: Colors.red,
+                              ),
+                              child: const Text('désolé'),
+                            ),
                       ElevatedButton(
-                        onPressed: () {},
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.green,
-                        ),
-                        child: const Text('Je viens'),
-                      ),
-                      const Text('\n'),
-                      ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.pushNamed(context, '/event_create');
+                        },
                         style: ElevatedButton.styleFrom(
                           primary: Colors.red,
                         ),
-                        child: const Text('désolé'),
+                        child: const Text('Créer un event'),
                       ),
-                      const Text('\n'),
-                      const Text(
-                        'Information présence / absence',
-                        style: TextStyle(
-                            backgroundColor: Color.fromARGB(255, 255, 255, 255),
-                            fontWeight: FontWeight.bold),
-                      )
-                    ]))
+                    ])),
+                // Expanded(
+                //   child: ListView(
+                //       scrollDirection: Axis.horizontal, children:const<Widget>[]),
+                // ),
               ])));
     });
   }

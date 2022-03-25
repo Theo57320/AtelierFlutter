@@ -9,31 +9,27 @@ import 'package:flutter/material.dart';
 import 'package:email_validator/email_validator.dart';
 import 'package:reunionou/data/api_call.dart';
 
-class AuthScreen extends StatefulWidget {
-  const AuthScreen({Key? key}) : super(key: key);
+class EventCreate extends StatefulWidget {
+  const EventCreate({Key? key}) : super(key: key);
 
   @override
-  _AuthScreenState createState() => _AuthScreenState();
+  _EventCreateState createState() => _EventCreateState();
 }
 
-class _AuthScreenState extends State<AuthScreen> {
-  final myControllerMail = TextEditingController();
-  final myControllerPassword = TextEditingController();
-
-  initState() {
-    // getUsers().then((value) {
-    //   print(value);
-    // });
-    // getAuth('jm@g.com', 'test').then((value) {
-    //   print(value);
-    // });
-  }
-
+class _EventCreateState extends State<EventCreate> {
+  final myControllerTitreEvent = TextEditingController();
+  final myControllerDescription = TextEditingController();
+  final myControllerDate = TextEditingController();
+  final myControllerHeure = TextEditingController();
+  final myControllerLieu = TextEditingController();
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
-    myControllerMail.dispose();
-    myControllerPassword.dispose();
+    myControllerDescription.dispose();
+    myControllerHeure.dispose();
+    myControllerDate.dispose();
+    myControllerTitreEvent.dispose();
+    myControllerLieu.dispose();
     super.dispose();
   }
 
@@ -52,7 +48,7 @@ class _AuthScreenState extends State<AuthScreen> {
               // ignore: unnecessary_const
               RichText(
                 text: TextSpan(
-                  text: 'Bienvenue sur\n'.toUpperCase(),
+                  text: 'Création d\'un événement\n'.toUpperCase(),
                   style: TextStyle(
                     color: Colors.black,
                     fontSize: 30.0,
@@ -74,7 +70,7 @@ class _AuthScreenState extends State<AuthScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
-                      'Identifiant',
+                      'Titre',
                       style: TextStyle(
                         fontStyle: FontStyle.italic,
                       ),
@@ -85,9 +81,9 @@ class _AuthScreenState extends State<AuthScreen> {
                     TextFormField(
                       validator: (value) => EmailValidator.validate(value!)
                           ? null
-                          : "Please enter a valid email",
+                          : "Please enter a valid titre",
                       decoration: InputDecoration(
-                        hintText: 'Ex: theo.antolini@mail.com',
+                        hintText: 'Ex: Anniversaire',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(0.0),
                           borderSide: BorderSide(
@@ -99,24 +95,17 @@ class _AuthScreenState extends State<AuthScreen> {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                       ),
-                      controller: myControllerMail,
+                      controller: myControllerTitreEvent,
                     ),
                     SizedBox(height: 10.0),
                     TextFormField(
-                      obscureText: _isSecret,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a Password';
+                          return 'Please enter a Description';
                         }
                       },
                       decoration: InputDecoration(
-                        suffixIcon: InkWell(
-                          onTap: () => setState(() => _isSecret = !_isSecret),
-                          child: Icon(!_isSecret
-                              ? Icons.visibility
-                              : Icons.visibility_off),
-                        ),
-                        hintText: 'Password',
+                        hintText: 'Description',
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(0.0),
                           borderSide: BorderSide(
@@ -128,7 +117,79 @@ class _AuthScreenState extends State<AuthScreen> {
                           borderSide: BorderSide(color: Colors.grey),
                         ),
                       ),
-                      controller: myControllerPassword,
+                      controller: myControllerDescription,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a date';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Date',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      controller: myControllerDate,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a time';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Heure',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      controller: myControllerHeure,
+                    ),
+                    SizedBox(
+                      height: 10.0,
+                    ),
+                    TextFormField(
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter an adresse';
+                        }
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Lieu',
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(
+                            color: Colors.grey,
+                          ),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(0.0),
+                          borderSide: BorderSide(color: Colors.grey),
+                        ),
+                      ),
+                      controller: myControllerLieu,
                     ),
                     SizedBox(
                       height: 10.0,
@@ -138,30 +199,12 @@ class _AuthScreenState extends State<AuthScreen> {
                       elevation: 0,
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       onPressed: () {
-                        ApiCall.getMarkers().then((value) {
+                        ApiCall.getCoo(myControllerLieu).then((value) {
                           print(value);
                         });
-                        Navigator.pushNamed(context, '/event_map');
-                        // if (_formKey.currentState!.validate()) {
-                        //   ApiCall.getAuth(myControllerMail.text,
-                        //           myControllerPassword.text)
-                        //       .then((value) {
-                        //     print(value);
-                        //     if (value == true) {
-                        //
-                        //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Connexion')),
-                        //       );
-                        //     } else {
-                        //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Failed')),
-                        //       );
-                        //     }
-                        //   });
-                        // }
                       },
                       child: Text(
-                        'continue'.toUpperCase(),
+                        'creer'.toUpperCase(),
                         style: TextStyle(
                           color: Colors.white,
                         ),
@@ -174,9 +217,11 @@ class _AuthScreenState extends State<AuthScreen> {
                       color: Theme.of(context).primaryColor,
                       elevation: 0,
                       padding: EdgeInsets.symmetric(vertical: 15.0),
-                      onPressed: () => launch('http://google.com'),
+                      onPressed: () =>
+                          Navigator.pushNamed(context, '/event_map'),
+                      //http://api.positionstack.com/v1/forward?access_key=01ba22585ec570b67b6ce941657cade1&query=1600 Pennsylvania Ave NW, Washington DC
                       child: Text(
-                        'Créer un comte'.toUpperCase(),
+                        'annuler'.toUpperCase(),
                         style: TextStyle(
                           color: Colors.white,
                         ),
