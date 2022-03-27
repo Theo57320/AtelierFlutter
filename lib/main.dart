@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 import 'package:reunionou/data/users_collection.dart';
 import 'package:reunionou/models/user.dart';
 import 'package:reunionou/screens/authentification.dart';
-import 'package:reunionou/screens/home_page.dart';
+
 import 'package:http/http.dart' as http;
+import 'package:reunionou/screens/mes_events.dart';
+import 'package:reunionou/screens/profil.dart';
 
 import 'screens/event_create.dart';
 import 'screens/event_map.dart';
@@ -44,6 +46,8 @@ class MyApp extends StatelessWidget {
           '/event_map': (context) => EventMap(),
           '/authentification': (context) => AuthScreen(),
           '/event_create': (context) => EventCreate(),
+          '/profil': (context) => Profil(),
+          //'/mesEvents': (context) => MesEvents(),
           // When navigating to the "/second" route, build the SecondScreen widget.
         },
         initialRoute: '/authentification',

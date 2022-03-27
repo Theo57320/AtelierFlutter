@@ -150,11 +150,15 @@ class _AuthScreenState extends State<AuthScreen> {
                         //     if (value == true) {
                         //
                         //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Connexion')),
+                        //         const SnackBar(content: Text('Connexion')
+                        //  duration:
+                        //       Duration(hours: 0, minutes: 0, seconds: 5),),
                         //       );
                         //     } else {
                         //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Failed')),
+                        //         const SnackBar(content: Text('Failed'),
+                        //  duration:
+                        //      Duration(hours: 0, minutes: 0, seconds: 5),),
                         //       );
                         //     }
                         //   });

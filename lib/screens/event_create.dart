@@ -22,6 +22,8 @@ class _EventCreateState extends State<EventCreate> {
   final myControllerDate = TextEditingController();
   final myControllerHeure = TextEditingController();
   final myControllerLieu = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+
   @override
   void dispose() {
     // Clean up the controller when the widget is disposed.
@@ -122,26 +124,15 @@ class _EventCreateState extends State<EventCreate> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a date';
-                        }
+                    CalendarDatePicker(
+                      firstDate: DateTime(2019),
+                      lastDate: DateTime(2030, 12, 12),
+                      initialDate: selectedDate,
+                      onDateChanged: (date) {
+                        setState(() {
+                          selectedDate = date;
+                        });
                       },
-                      decoration: InputDecoration(
-                        hintText: 'Date',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      controller: myControllerDate,
                     ),
                     SizedBox(
                       height: 10.0,
@@ -200,8 +191,37 @@ class _EventCreateState extends State<EventCreate> {
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       onPressed: () {
                         ApiCall.getCoo(myControllerLieu).then((value) {
-                          print(value);
+                          if (value == true) {
+                            ApiCall.addEvent(
+                                    myControllerTitreEvent.value.text,
+                                    selectedDate,
+                                    UserCollection.lat,
+                                    UserCollection.long,
+                                    myControllerLieu.value.text,
+                                    myControllerHeure.value.text)
+                                .then((value) {
+                              if (value == true) {
+                                Navigator.pushNamed(context, '/event_map');
+                                return ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                      content: Text('Created: Success')),
+                                );
+                              } else {
+                                return ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                      content: Text(
+                                          'Created: Error try again and verify your values')),
+                                );
+                              }
+                            });
+                          } else {
+                            print('erreur adresse invalide');
+                          }
+                          ;
                         });
+                        ;
                       },
                       child: Text(
                         'creer'.toUpperCase(),

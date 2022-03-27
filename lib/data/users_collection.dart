@@ -15,8 +15,10 @@ class UserCollection extends ChangeNotifier {
   static String token = '';
   static List<dynamic> marker = [];
   static List<Marker> tab_markers = [];
-  static String nom = '';
-  static String prenom = '';
+  static List<dynamic> myEvents = [];
+  static String nom = 'achour';
+  static String prenom = 'mouloud';
+  static String mail = 'moulou@achour';
   String id_event = '';
   static String id = '24fc6110-26ab-4f1d-8448-21dd72d58fb3';
   String libelleLieu = '';
@@ -62,5 +64,13 @@ class UserCollection extends ChangeNotifier {
       participe += '\n' + new_nom + ' ne participe pas à l\'évenement.';
       notifyListeners();
     }
+  }
+
+  logout() {
+    nom = '';
+    prenom = '';
+    mail = '';
+    id = '';
+    notifyListeners();
   }
 }

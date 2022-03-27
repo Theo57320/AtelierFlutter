@@ -29,7 +29,7 @@ class ApiCall {
     Dio dio = Dio(); // first create object of Dio lib
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
     var response = await Dio().get(
-      'http://3a95-194-214-171-11.ngrok.io/auth',
+      'http://94af-109-18-18-135.ngrok.io/auth',
       options: Options(
         headers: <String, String>{'authorization': basicAuth},
       ),
@@ -43,6 +43,7 @@ class ApiCall {
       UserCollection.nom = data['nom'];
       UserCollection.prenom = data['prenom'];
       UserCollection.token = data['token'];
+      UserCollection.mail = data['mail'];
       return true;
     } else if (response.statusCode == 401) {
       return false;
@@ -50,10 +51,9 @@ class ApiCall {
   }
 
   static getMarkers() async {
-    print('ko');
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://3a95-194-214-171-11.ngrok.io/events',
+      'http://94af-109-18-18-135.ngrok.io/InvitEvents',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -70,9 +70,9 @@ class ApiCall {
       // If response is success
       var data = response.data; // here data is converted json - Not a String.
       // This is handled by dio package internally so we don't need to handle this manually
+      print(data['events']);
+      UserCollection.marker = data['events'];
 
-      UserCollection.marker = data;
-      print(UserCollection.marker);
       return true;
     } else if (response.statusCode == 401) {
       return false;
@@ -83,7 +83,7 @@ class ApiCall {
     print('ko');
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().post(
-      'http://3a95-194-214-171-11.ngrok.io/Venir/$id',
+      'http://94af-109-18-18-135.ngrok.io/Venir/$id',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -96,6 +96,7 @@ class ApiCall {
         },
       ),
     );
+
     if (response.statusCode == 200) {
       // If response is success
       var data = response.data; // here data is converted json - Not a String.
@@ -109,11 +110,10 @@ class ApiCall {
     }
   }
 
-  static addEvent(titre, date, lat, long, lieu, heure) async {
-    print('ko');
+  static getPasVenir(id) async {
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().post(
-      'http://3a95-194-214-171-11.ngrok.io//',
+      'http://94af-109-18-18-135.ngrok.io/PasVenir/$id',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -126,12 +126,41 @@ class ApiCall {
         },
       ),
     );
+
     if (response.statusCode == 200) {
       // If response is success
       var data = response.data; // here data is converted json - Not a String.
       // This is handled by dio package internally so we don't need to handle this manually
 
       print('yo');
+      return true;
+    } else {
+      print('erreur');
+      return false;
+    }
+  }
+
+  static addEvent(titre, date, double lat, double long, lieu, horaire) async {
+    print('addEvent');
+    var response =
+        await Dio().post('http://94af-109-18-18-135.ngrok.io/postEvent',
+            queryParameters: {
+              "token":
+                  //UserCollection.token
+                  "4c252d21a886af0c69ca6180f5dcb7994d297a39d70c8b9940879b3a45b3257a"
+            },
+            data: jsonEncode(
+              {
+                "lat": lat,
+                "long": long,
+                "libelle_event": titre,
+                "libelle_lieu": lieu,
+                "horaire": horaire,
+                "date": date[0]
+              },
+            ));
+    if (response.statusCode == 201) {
+      print('true');
       return true;
     } else {
       print('erreur');
@@ -143,7 +172,7 @@ class ApiCall {
     print('comment');
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://3a95-194-214-171-11.ngrok.io/ListComments/$id',
+      'http://94af-109-18-18-135.ngrok.io/ListComments/$id',
       options: Options(
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -188,9 +217,72 @@ class ApiCall {
 
       UserCollection.lat = data['data'][0]['latitude'];
       UserCollection.long = data['data'][0]['longitude'];
-
+      print(UserCollection.lat);
       return true;
     } else {
+      return false;
+    }
+  }
+
+  static updateUser(nom, prenom, mail) async {
+    print(mail);
+    Dio dio = Dio(); // first create object of Dio lib
+    var response = await Dio().post(
+      'http://94af-109-18-18-135.ngrok.io/updateUser',
+      options: Options(
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+      queryParameters: {
+        "token":
+            //UserCollection.token
+            "4c252d21a886af0c69ca6180f5dcb7994d297a39d70c8b9940879b3a45b3257a",
+        "&nom": nom,
+        "&mail": mail,
+        "&prenom": prenom
+      },
+    );
+
+    if (response.statusCode == 201 || response.statusCode == 200) {
+      // If response is success
+      var data = response.data; // here data is converted json - Not a String.
+      // This is handled by dio package internally so we don't need to handle this manually
+      print(data);
+      return true;
+    } else {
+      print('erreur');
+      return false;
+    }
+  }
+
+  static myEvents() async {
+    Dio dio = Dio(); // first create object of Dio lib
+    var response = await Dio().get(
+      'http://94af-109-18-18-135.ngrok.io/AllMyEvents',
+      queryParameters: {
+        "token":
+            //UserCollection.token
+            "4c252d21a886af0c69ca6180f5dcb7994d297a39d70c8b9940879b3a45b3257a"
+      },
+      options: Options(
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        },
+      ),
+    );
+    if (response.statusCode == 200) {
+      // If response is success
+      var myEvents =
+          response.data; // here data is converted json - Not a String.
+      // This is handled by dio package internally so we don't need to handle this manually
+      print(myEvents['events']);
+      UserCollection.marker = myEvents['events'];
+
+      return true;
+    } else if (response.statusCode == 401) {
       return false;
     }
   }
