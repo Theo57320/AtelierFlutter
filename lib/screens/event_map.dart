@@ -64,6 +64,12 @@ class _ManyMarkersPageState extends State<EventMap> {
                                 .then((value) {
                               print(value);
                             });
+                            print(element['createur_id']);
+                            ApiCall.getUser(element['createur_id'])
+                                .then((value) {
+                              userCollection.setCreateur(
+                                  value['nom'], value['mail'], value['prenom']);
+                            });
                           },
                           child: Icon(
                             Icons.circle,
@@ -124,13 +130,26 @@ class _ManyMarkersPageState extends State<EventMap> {
                     !_canShowButton
                         ? const SizedBox.shrink()
                         : Text(
-                            userCollection.libelleLieu +
+                            "libelle_lieu :" +
+                                userCollection.libelleLieu +
                                 "\n" +
+                                "libelle_event :" +
                                 userCollection.libelle_event +
                                 "\n" +
+                                "horaire :" +
                                 userCollection.horaire +
                                 "\n" +
-                                userCollection.date,
+                                "date :" +
+                                userCollection.date +
+                                "\n" +
+                                "prenom créateur :" +
+                                userCollection.prenom_createur +
+                                "\n" +
+                                "nom créateur :" +
+                                userCollection.nom_createur +
+                                "\n" +
+                                "mail créateur :" +
+                                userCollection.mail_createur,
                             style: TextStyle(
                                 color: Color.fromARGB(255, 0, 0, 0),
                                 fontWeight: FontWeight.bold),

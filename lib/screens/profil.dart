@@ -171,7 +171,15 @@ class ProfilPageState extends State<Profil> {
                                     .then((value) {
                                   print(value);
                                 });
-                                //Navigator.pushNamed(context, '/event_map');
+                                Navigator.pushNamed(context, '/event_map');
+
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Update'),
+                                    duration: Duration(
+                                        hours: 0, minutes: 0, seconds: 5),
+                                  ),
+                                );
                                 // if (_formKey.currentState!.validate()) {
                                 //   ApiCall.getAuth(myControllerMail.text,
                                 //           myControllerPassword.text)
@@ -179,9 +187,7 @@ class ProfilPageState extends State<Profil> {
                                 //     print(value);
                                 //     if (value == true) {
                                 //
-                                //       return ScaffoldMessenger.of(context).showSnackBar(
-                                //         const SnackBar(content: Text('Connexion')),
-                                //       );
+                                //
                                 //     } else {
                                 //       return ScaffoldMessenger.of(context).showSnackBar(
                                 //         const SnackBar(content: Text('Failed')),

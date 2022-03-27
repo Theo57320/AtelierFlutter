@@ -19,6 +19,9 @@ class UserCollection extends ChangeNotifier {
   static String nom = 'achour';
   static String prenom = 'mouloud';
   static String mail = 'moulou@achour';
+  String nom_createur = '';
+  String prenom_createur = '';
+  String mail_createur = '';
   String id_event = '';
   static String id = '24fc6110-26ab-4f1d-8448-21dd72d58fb3';
   String libelleLieu = '';
@@ -45,14 +48,20 @@ class UserCollection extends ChangeNotifier {
     notifyListeners();
   }
 
+  setCreateur(String nom, String mail, String prenom) {
+    prenom_createur = prenom;
+    nom_createur = nom;
+    mail_createur = mail;
+    notifyListeners();
+  }
+
   setDateEvent(String new_date) {
     date = new_date;
     notifyListeners();
   }
 
-  setIdEvent(String idEvent) {
+  setIdEvent(idEvent) {
     id_event = idEvent;
-    print(id_event);
     notifyListeners();
   }
 

@@ -141,6 +141,7 @@ class _AuthScreenState extends State<AuthScreen> {
                         ApiCall.getMarkers().then((value) {
                           print(value);
                         });
+
                         Navigator.pushNamed(context, '/event_map');
                         // if (_formKey.currentState!.validate()) {
                         //   ApiCall.getAuth(myControllerMail.text,
