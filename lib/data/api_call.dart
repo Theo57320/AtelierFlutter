@@ -29,7 +29,7 @@ class ApiCall {
     Dio dio = Dio(); // first create object of Dio lib
     String basicAuth = 'Basic ' + base64Encode(utf8.encode('$email:$password'));
     var response = await Dio().get(
-      'http://94af-109-18-18-135.ngrok.io/auth',
+      'http://8a35-109-190-253-15.ngrok.io/auth',
       options: Options(
         headers: <String, String>{'authorization': basicAuth},
       ),
@@ -53,11 +53,11 @@ class ApiCall {
   static getMarkers() async {
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://245d-109-18-18-135.ngrok.io/InvitEvents',
+      'http://8a35-109-190-253-15.ngrok.io/InvitEvents',
       queryParameters: {
         "token":
             //UserCollection.token
-            "4c252d21a886af0c69ca6180f5dcb7994d297a39d70c8b9940879b3a45b3257a"
+            "5c96aaadc86a534f118fb38227e6e6ad210dbc7d057d250e52f1fbec40e1d4ee"
       },
       options: Options(
         headers: <String, String>{
@@ -83,7 +83,7 @@ class ApiCall {
     print('ko');
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().post(
-      'http://245d-109-18-18-135.ngrok.io/Venir/$id',
+      'http://8a35-109-190-253-15.ngrok.io/Venir/$id',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -113,7 +113,7 @@ class ApiCall {
   static getPasVenir(id) async {
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().post(
-      'http://245d-109-18-18-135.ngrok.io/PasVenir/$id',
+      'http://8a35-109-190-253-15.ngrok.io/PasVenir/$id',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -142,12 +142,14 @@ class ApiCall {
 
   static addEvent(titre, date, double lat, double long, lieu, horaire) async {
     print('addEvent');
+    date = date.toString().split(" ");
+    print(date[0]);
     var response =
-        await Dio().post('http://245d-109-18-18-135.ngrok.io/postEvent',
+        await Dio().post('http://8a35-109-190-253-15.ngrok.io/postEvent',
             queryParameters: {
               "token":
                   //UserCollection.token
-                  "4c252d21a886af0c69ca6180f5dcb7994d297a39d70c8b9940879b3a45b3257a"
+                  "5c96aaadc86a534f118fb38227e6e6ad210dbc7d057d250e52f1fbec40e1d4ee"
             },
             data: jsonEncode(
               {
@@ -172,7 +174,7 @@ class ApiCall {
     print('comment');
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://245d-109-18-18-135.ngrok.io/ListComments/$id',
+      'http://8a35-109-190-253-15.ngrok.io/ListComments/$id',
       options: Options(
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -227,7 +229,7 @@ class ApiCall {
   static updateUser(nom, prenom, mail) async {
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().post(
-      'http://245d-109-18-18-135.ngrok.io/updateUser',
+      'http://8a35-109-190-253-15.ngrok.io/updateUser',
       options: Options(
         headers: <String, String>{
           'Content-Type': 'application/json',
@@ -259,7 +261,7 @@ class ApiCall {
   static myEvents() async {
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://245d-109-18-18-135.ngrok.io/AllMyEvents',
+      'http://8a35-109-190-253-15.ngrok.io/AllMyEvents',
       queryParameters: {
         "token":
             //UserCollection.token
@@ -290,7 +292,7 @@ class ApiCall {
     print(id);
     Dio dio = Dio(); // first create object of Dio lib
     var response = await Dio().get(
-      'http://245d-109-18-18-135.ngrok.io/getUser',
+      'http://8a35-109-190-253-15.ngrok.io/getUser',
       queryParameters: {
         "token":
             //UserCollection.token

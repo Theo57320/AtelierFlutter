@@ -200,6 +200,7 @@ class _EventCreateState extends State<EventCreate> {
                                     myControllerLieu.value.text,
                                     myControllerHeure.value.text)
                                 .then((value) {
+                              print(value);
                               if (value == true) {
                                 Navigator.pushNamed(context, '/event_map');
                                 return ScaffoldMessenger.of(context)

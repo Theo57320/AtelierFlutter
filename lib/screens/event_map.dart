@@ -36,13 +36,13 @@ class _ManyMarkersPageState extends State<EventMap> {
     });
   }
 
+  var buttons = true;
   @override
   void initState() {
     super.initState();
     generateComments();
     WidgetsBinding.instance?.addPostFrameCallback((_) => Future.microtask(() {
           for (var element in UserCollection.marker) {
-            print('test');
             allMarkers.add(
               Marker(
                   point: LatLng(double.parse(element['lat']),
@@ -65,9 +65,14 @@ class _ManyMarkersPageState extends State<EventMap> {
                               print(value);
                             });
                             print(element['createur_id']);
+                            if (element['createur_id'] == UserCollection.id) {
+                              buttons = false;
+                            } else {
+                              buttons = true;
+                            }
                             ApiCall.getUser(element['createur_id'])
                                 .then((value) {
-                              userCollection.setCreateur(
+                              userCollection.setCreateur(value['id'],
                                   value['nom'], value['mail'], value['prenom']);
                             });
                           },
@@ -142,13 +147,13 @@ class _ManyMarkersPageState extends State<EventMap> {
                                 "date :" +
                                 userCollection.date +
                                 "\n" +
-                                "prenom créateur :" +
+                                "Créateur(prenom) :" +
                                 userCollection.prenom_createur +
                                 "\n" +
-                                "nom créateur :" +
+                                "Créateur(nom) :" +
                                 userCollection.nom_createur +
                                 "\n" +
-                                "mail créateur :" +
+                                "Créateur(mail) :" +
                                 userCollection.mail_createur,
                             style: TextStyle(
                                 color: Color.fromARGB(255, 0, 0, 0),
@@ -156,29 +161,34 @@ class _ManyMarkersPageState extends State<EventMap> {
                           ),
                     !_canShowButton
                         ? const SizedBox.shrink()
-                        : ElevatedButton(
-                            onPressed: () {
-                              ApiCall.getVenir(userCollection.id_event);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.green,
-                            ),
-                            child: const Text('Je viens'),
-                          ),
+                        : !buttons
+                            ? const SizedBox.shrink()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  ApiCall.getVenir(userCollection.id_event);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.green,
+                                ),
+                                child: const Text('Je viens'),
+                              ),
                     !_canShowButton
                         ? const SizedBox.shrink()
-                        : ElevatedButton(
-                            onPressed: () {
-                              ApiCall.getVenir(UserCollection.id).then((value) {
-                                print(value);
-                              });
-                              ApiCall.getPasVenir(userCollection.id_event);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              primary: Colors.red,
-                            ),
-                            child: const Text('désolé'),
-                          ),
+                        : !buttons
+                            ? const SizedBox.shrink()
+                            : ElevatedButton(
+                                onPressed: () {
+                                  ApiCall.getVenir(UserCollection.id)
+                                      .then((value) {
+                                    print(value);
+                                  });
+                                  ApiCall.getPasVenir(userCollection.id_event);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  primary: Colors.red,
+                                ),
+                                child: const Text('désolé'),
+                              ),
                   ])),
               Container(
                   child: ButtonBar(
