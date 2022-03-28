@@ -231,7 +231,10 @@ class _ManyMarkersPageState extends State<EventMap> {
                     ),
                     ElevatedButton(
                       onPressed: () {
-                        ApiCall.myEvents();
+                        ApiCall.myEvents().then((value) {
+                          UserCollection.myEvents = value;
+                        });
+
                         Navigator.pushNamed(context, '/mesEvents');
                       },
                       style: ElevatedButton.styleFrom(

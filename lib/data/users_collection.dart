@@ -34,6 +34,11 @@ class UserCollection extends ChangeNotifier {
   static double lat = 0.0;
   static double long = 0.0;
 
+  Lieu? selectedEvent;
+  bool eventSelected(int index) {
+    return selectedEvent == myEvents[index];
+  }
+
   setLibelleLieu(String libel) {
     libelleLieu = libel;
     notifyListeners();

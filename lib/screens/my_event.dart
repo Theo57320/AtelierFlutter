@@ -3,14 +3,14 @@ import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
 import 'package:reunionou/data/users_collection.dart';
 
-class MesEvents extends StatefulWidget {
-  MesEvents({Key? key}) : super(key: key);
+class MyEvent extends StatefulWidget {
+  MyEvent({Key? key}) : super(key: key);
 
   @override
   _ManyMarkersPageState createState() => _ManyMarkersPageState();
 }
 
-class _ManyMarkersPageState extends State<MesEvents> {
+class _ManyMarkersPageState extends State<MyEvent> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

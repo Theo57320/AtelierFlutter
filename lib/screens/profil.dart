@@ -142,6 +142,10 @@ class ProfilPageState extends State<Profil> {
                               ),
                             ),
                             TextFormField(
+                                validator: (value) =>
+                                    EmailValidator.validate(value!)
+                                        ? null
+                                        : "Please enter a valid email",
                                 decoration: InputDecoration(
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(0.0),
@@ -164,22 +168,24 @@ class ProfilPageState extends State<Profil> {
                                 primary: Colors.lightBlue,
                               ),
                               onPressed: () {
-                                ApiCall.updateUser(
-                                        myControllerNom.value.text,
-                                        myControllerPrenom.value.text,
-                                        myControllerMail.value.text)
-                                    .then((value) {
-                                  print(value);
-                                });
-                                Navigator.pushNamed(context, '/event_map');
+                                if (_formKey.currentState!.validate()) {
+                                  ApiCall.updateUser(
+                                          myControllerNom.value.text,
+                                          myControllerPrenom.value.text,
+                                          myControllerMail.value.text)
+                                      .then((value) {
+                                    print(value);
+                                  });
+                                  Navigator.pushNamed(context, '/event_map');
 
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                    content: Text('Update'),
-                                    duration: Duration(
-                                        hours: 0, minutes: 0, seconds: 5),
-                                  ),
-                                );
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(
+                                      content: Text('Update'),
+                                      duration: Duration(
+                                          hours: 0, minutes: 0, seconds: 5),
+                                    ),
+                                  );
+                                }
                                 // if (_formKey.currentState!.validate()) {
                                 //   ApiCall.getAuth(myControllerMail.text,
                                 //           myControllerPassword.text)
