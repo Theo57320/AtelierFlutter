@@ -10,4 +10,4 @@ Problème de rechargement des données :
 
 Lors de la création d'un event il faut se reconnecter.
 
-Lors de l'ajout d'un message il faut ajouter le message retourner à la map et aller a nouveau sur la page des participants et commentaires.
+Lors de l'ajout d'un message il faut ajouter le message, retourner à la map et aller à nouveau sur la page des participants et commentaires.
