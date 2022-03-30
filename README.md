@@ -19,6 +19,13 @@ Sur la page avec la map il y a 4 boutons :
   - Deconnexion pour se deconnecter
   - Mes events qui affiche la liste des events créer par l'utilisateur avec la possibilité de cliquer dessus, ce qui affiche des infos sur l'event et la liste des utilisateurs avec un bouton pour inviter chaque utilisateur.
 
+## installation 
+
+git clone --branch master https://github.com/Theo57320/AtelierFlutter
+
+lancer un emulateur android 
+
+flutter run dans le dossier AtelierFlutter
 
 ## Participants
 
