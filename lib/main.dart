@@ -11,6 +11,7 @@ import 'package:reunionou/screens/authentification.dart';
 import 'package:http/http.dart' as http;
 import 'package:reunionou/screens/mes_events.dart';
 import 'package:reunionou/screens/my_event.dart';
+import 'package:reunionou/screens/participant_commentaire.dart';
 import 'package:reunionou/screens/profil.dart';
 
 import 'screens/event_create.dart';
@@ -50,6 +51,7 @@ class MyApp extends StatelessWidget {
           '/profil': (context) => Profil(),
           '/mesEvents': (context) => MesEvents(),
           '/myEvent': (context) => MyEvent(),
+          '/participant_commentaire': (context) => ParticipantsCommentaires(),
           // When navigating to the "/second" route, build the SecondScreen widget.
         },
         initialRoute: '/authentification',

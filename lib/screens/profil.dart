@@ -56,7 +56,8 @@ class ProfilPageState extends State<Profil> {
   Widget build(BuildContext context) {
     return Consumer<UserCollection>(builder: (context, userCollection, child) {
       return Scaffold(
-          appBar: AppBar(title: Text(userCollection.title)),
+          appBar:
+              AppBar(title: Text(userCollection.title), leading: Container()),
           body: Center(
             child: SingleChildScrollView(
                 padding: EdgeInsets.symmetric(horizontal: 30.0),
@@ -98,6 +99,7 @@ class ProfilPageState extends State<Profil> {
                             ),
                             TextFormField(
                               decoration: InputDecoration(
+                                hintText: UserCollection.nom,
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(0.0),
                                   borderSide: BorderSide(
@@ -121,6 +123,7 @@ class ProfilPageState extends State<Profil> {
                             ),
                             TextFormField(
                                 decoration: InputDecoration(
+                                  hintText: UserCollection.prenom,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(0.0),
                                     borderSide: BorderSide(
@@ -147,6 +150,7 @@ class ProfilPageState extends State<Profil> {
                                         ? null
                                         : "Please enter a valid email",
                                 decoration: InputDecoration(
+                                  hintText: UserCollection.mail,
                                   border: OutlineInputBorder(
                                     borderRadius: BorderRadius.circular(0.0),
                                     borderSide: BorderSide(
@@ -173,34 +177,20 @@ class ProfilPageState extends State<Profil> {
                                           myControllerNom.value.text,
                                           myControllerPrenom.value.text,
                                           myControllerMail.value.text)
-                                      .then((value) {
-                                    print(value);
-                                  });
-                                  Navigator.pushNamed(context, '/event_map');
+                                      .then((value) {});
 
+                                  userCollection.logout();
+                                  Navigator.pushNamed(
+                                      context, '/authentification');
                                   ScaffoldMessenger.of(context).showSnackBar(
                                     const SnackBar(
-                                      content: Text('Update'),
+                                      content: Text(
+                                          'Veuillez vous reconnecter suite à la modification'),
                                       duration: Duration(
                                           hours: 0, minutes: 0, seconds: 5),
                                     ),
                                   );
                                 }
-                                // if (_formKey.currentState!.validate()) {
-                                //   ApiCall.getAuth(myControllerMail.text,
-                                //           myControllerPassword.text)
-                                //       .then((value) {
-                                //     print(value);
-                                //     if (value == true) {
-                                //
-                                //
-                                //     } else {
-                                //       return ScaffoldMessenger.of(context).showSnackBar(
-                                //         const SnackBar(content: Text('Failed')),
-                                //       );
-                                //     }
-                                //   });
-                                // }
                               },
                               child: Text(
                                 'Modifier'.toUpperCase(),
@@ -215,29 +205,11 @@ class ProfilPageState extends State<Profil> {
                               ),
                               onPressed: () {
                                 ApiCall.getMarkers().then((value) {
-                                  print(value);
+                                  Navigator.pushNamed(context, '/event_map');
                                 });
-                                Navigator.pushNamed(context, '/event_map');
-                                // if (_formKey.currentState!.validate()) {
-                                //   ApiCall.getAuth(myControllerMail.text,
-                                //           myControllerPassword.text)
-                                //       .then((value) {
-                                //     print(value);
-                                //     if (value == true) {
-                                //
-                                //       return ScaffoldMessenger.of(context).showSnackBar(
-                                //         const SnackBar(content: Text('Connexion')),
-                                //       );
-                                //     } else {
-                                //       return ScaffoldMessenger.of(context).showSnackBar(
-                                //         const SnackBar(content: Text('Failed')),
-                                //       );
-                                //     }
-                                //   });
-                                // }
                               },
                               child: Text(
-                                'Supprimer le compte'.toUpperCase(),
+                                'Annuler'.toUpperCase(),
                                 style: TextStyle(
                                   color: Colors.white,
                                 ),

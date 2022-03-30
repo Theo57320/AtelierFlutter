@@ -85,7 +85,7 @@ class _AuthScreenState extends State<AuthScreen> {
                     TextFormField(
                       validator: (value) => EmailValidator.validate(value!)
                           ? null
-                          : "Please enter a valid email",
+                          : "Entrez votre mail s\'il vous plait",
                       decoration: InputDecoration(
                         hintText: 'Ex: theo.antolini@mail.com',
                         border: OutlineInputBorder(
@@ -106,7 +106,7 @@ class _AuthScreenState extends State<AuthScreen> {
                       obscureText: _isSecret,
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter a Password';
+                          return 'Entrez un mot de passe  s\'il vous plait';
                         }
                       },
                       decoration: InputDecoration(
@@ -138,32 +138,42 @@ class _AuthScreenState extends State<AuthScreen> {
                       elevation: 0,
                       padding: EdgeInsets.symmetric(vertical: 15.0),
                       onPressed: () {
-                        ApiCall.getMarkers().then((value) {
-                          print(value);
-                        });
-
-                        Navigator.pushNamed(context, '/event_map');
-                        // if (_formKey.currentState!.validate()) {
-                        //   ApiCall.getAuth(myControllerMail.text,
-                        //           myControllerPassword.text)
-                        //       .then((value) {
-                        //     print(value);
-                        //     if (value == true) {
-                        //
-                        //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Connexion')
-                        //  duration:
-                        //       Duration(hours: 0, minutes: 0, seconds: 5),),
-                        //       );
-                        //     } else {
-                        //       return ScaffoldMessenger.of(context).showSnackBar(
-                        //         const SnackBar(content: Text('Failed'),
-                        //  duration:
-                        //      Duration(hours: 0, minutes: 0, seconds: 5),),
-                        //       );
-                        //     }
-                        //   });
-                        // }
+                        if (_formKey.currentState!.validate()) {
+                          ApiCall.getAuth(myControllerMail.text,
+                                  myControllerPassword.text)
+                              .then((value) {
+                            print('ici');
+                            print(value);
+                            if (value == true) {
+                              ApiCall.check();
+                              ApiCall.getMarkers().then((value) {
+                                Navigator.pushNamed(context, '/event_map');
+                              });
+                              ApiCall.getUsers().then((value) {
+                                UserCollection.users = value;
+                                ApiCall.lastConnection().then((value) {
+                                  print(value);
+                                });
+                                return ScaffoldMessenger.of(context)
+                                    .showSnackBar(
+                                  const SnackBar(
+                                    content: Text('Connexion'),
+                                    duration: Duration(
+                                        hours: 0, minutes: 0, seconds: 5),
+                                  ),
+                                );
+                              });
+                            } else {
+                              return ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text('Failed'),
+                                  duration: Duration(
+                                      hours: 0, minutes: 0, seconds: 5),
+                                ),
+                              );
+                            }
+                          });
+                        }
                       },
                       child: Text(
                         'continue'.toUpperCase(),
@@ -175,18 +185,18 @@ class _AuthScreenState extends State<AuthScreen> {
                     SizedBox(
                       height: 10.0,
                     ),
-                    RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      onPressed: () => launch('http://google.com'),
-                      child: Text(
-                        'Créer un comte'.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
+                    // RaisedButton(
+                    //   color: Theme.of(context).primaryColor,
+                    //   elevation: 0,
+                    //   padding: EdgeInsets.symmetric(vertical: 15.0),
+                    //   onPressed: () => launch('http://google.com'),
+                    //   child: Text(
+                    //     'Créer un compte'.toUpperCase(),
+                    //     style: TextStyle(
+                    //       color: Colors.white,
+                    //     ),
+                    //   ),
+                    // ),
                   ],
                 ),
               ),

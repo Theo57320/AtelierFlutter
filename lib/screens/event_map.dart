@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'dart:math';
 
 import 'package:flutter/material.dart';
@@ -36,60 +38,57 @@ class _ManyMarkersPageState extends State<EventMap> {
     });
   }
 
+  loadMarker() {
+    for (var element in UserCollection.marker) {
+      allMarkers.add(
+        Marker(
+            point: LatLng(
+                double.parse(element['lat']), double.parse(element['long'])),
+            builder: (BuildContext ctx) {
+              return Consumer<UserCollection>(
+                builder: (context, userCollection, child) {
+                  return GestureDetector(
+                    onTap: () {
+                      hideWidget();
+                      userCollection.setLibelleLieu(element['libelle_lieu']);
+                      userCollection.setlibelleEvent(element['libelle_event']);
+                      userCollection.setHoraireEvent(element['horaire']);
+                      userCollection.setDateEvent(element['date']);
+                      userCollection.setIdEvent(element['id']);
+                      ApiCall.getComment(userCollection.id_event).then((value) {
+                        UserCollection.messages = value;
+                      });
+
+                      ApiCall.getUser(element['createur_id']).then((value) {
+                        if (value['mail'] == UserCollection.mail) {
+                          buttons = false;
+                        } else {
+                          buttons = true;
+                        }
+                      });
+                      ApiCall.getUser(element['createur_id']).then((value) {
+                        userCollection.setCreateur(value['id'], value['nom'],
+                            value['mail'], value['prenom']);
+                      });
+                    },
+                    child: Icon(
+                      Icons.circle,
+                      color: Colors.red,
+                      size: 12.0,
+                    ),
+                  );
+                },
+              );
+            }),
+      );
+    }
+  }
+
   var buttons = true;
   @override
   void initState() {
     super.initState();
-    generateComments();
-    WidgetsBinding.instance?.addPostFrameCallback((_) => Future.microtask(() {
-          for (var element in UserCollection.marker) {
-            allMarkers.add(
-              Marker(
-                  point: LatLng(double.parse(element['lat']),
-                      double.parse(element['long'])),
-                  builder: (BuildContext ctx) {
-                    return Consumer<UserCollection>(
-                      builder: (context, userCollection, child) {
-                        return GestureDetector(
-                          onTap: () {
-                            hideWidget();
-                            userCollection
-                                .setLibelleLieu(element['libelle_lieu']);
-                            userCollection
-                                .setlibelleEvent(element['libelle_event']);
-                            userCollection.setHoraireEvent(element['horaire']);
-                            userCollection.setDateEvent(element['date']);
-                            userCollection.setIdEvent(element['id']);
-                            ApiCall.getComment(userCollection.id_event)
-                                .then((value) {
-                              print(value);
-                            });
-                            print(element['createur_id']);
-                            if (element['createur_id'] == UserCollection.id) {
-                              buttons = false;
-                            } else {
-                              buttons = true;
-                            }
-                            ApiCall.getUser(element['createur_id'])
-                                .then((value) {
-                              userCollection.setCreateur(value['id'],
-                                  value['nom'], value['mail'], value['prenom']);
-                            });
-                          },
-                          child: Icon(
-                            Icons.circle,
-                            color: Colors.red,
-                            size: 12.0,
-                          ),
-                        );
-                      },
-                    );
-                  }),
-            );
-            print(allMarkers);
-          }
-          setState(() {});
-        }));
+    // print(UserCollection.marker);
   }
 
   bool _canShowButton = false;
@@ -102,6 +101,9 @@ class _ManyMarkersPageState extends State<EventMap> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserCollection>(builder: (context, userCollection, child) {
+      loadMarker();
+      UserCollection.participantsNon = [];
+
       return Scaffold(
         appBar: AppBar(title: Text(userCollection.title), leading: Container()),
         body: Center(
@@ -165,7 +167,18 @@ class _ManyMarkersPageState extends State<EventMap> {
                             ? const SizedBox.shrink()
                             : ElevatedButton(
                                 onPressed: () {
-                                  ApiCall.getVenir(userCollection.id_event);
+                                  ApiCall.getVenir(userCollection.id_event)
+                                      .then((value) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Vous acceptez l\'invitation à cet event'),
+                                        duration: Duration(
+                                            hours: 0, minutes: 0, seconds: 5),
+                                      ),
+                                    );
+                                  });
+                                  ;
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.green,
@@ -178,17 +191,53 @@ class _ManyMarkersPageState extends State<EventMap> {
                             ? const SizedBox.shrink()
                             : ElevatedButton(
                                 onPressed: () {
-                                  ApiCall.getVenir(UserCollection.id)
+                                  ApiCall.getPasVenir(userCollection.id_event)
                                       .then((value) {
-                                    print(value);
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text(
+                                            'Vous refuser l\'invitation à cet event'),
+                                        duration: Duration(
+                                            hours: 0, minutes: 0, seconds: 5),
+                                      ),
+                                    );
                                   });
-                                  ApiCall.getPasVenir(userCollection.id_event);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   primary: Colors.red,
                                 ),
                                 child: const Text('désolé'),
                               ),
+                    buttons
+                        ? const SizedBox.shrink()
+                        : Text('Vous etes le créateur de l\'événement'),
+                    !_canShowButton
+                        ? const SizedBox.shrink()
+                        : ElevatedButton(
+                            onPressed: () {
+                              ApiCall.myEvent(userCollection.id_event)
+                                  .then((value) {
+                                //print(value);
+                                if (value != false) {
+                                  UserCollection.participants = value;
+                                  Navigator.pushNamed(
+                                      context, '/participant_commentaire');
+                                }
+                              });
+                              ApiCall.participePas(userCollection.id_event)
+                                  .then((part) {
+                                part.forEach((key, part) =>
+                                    UserCollection.participantsNon.add(part));
+                                //print(UserCollection.participantsNon.length);
+                                ;
+                                //print(UserCollection.participantsNon);
+                              });
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Colors.lightBlue,
+                            ),
+                            child: const Text('Participants / commentaire'),
+                          ),
                   ])),
               Container(
                   child: ButtonBar(
@@ -232,10 +281,26 @@ class _ManyMarkersPageState extends State<EventMap> {
                     ElevatedButton(
                       onPressed: () {
                         ApiCall.myEvents().then((value) {
-                          UserCollection.myEvents = value;
-                        });
+                          if (value != false) {
+                            UserCollection.myEvents = [];
+                            if (value.length == 1) {
+                              UserCollection.myEvents.add(value);
+                            } else {
+                              value.forEach((key, value) =>
+                                  UserCollection.myEvents.add(value));
+                            }
 
-                        Navigator.pushNamed(context, '/mesEvents');
+                            Navigator.pushNamed(context, '/mesEvents');
+                          } else {
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text('Vous n\'avez pas d\'event'),
+                                duration:
+                                    Duration(hours: 0, minutes: 0, seconds: 5),
+                              ),
+                            );
+                          }
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         primary: Colors.lightBlue,

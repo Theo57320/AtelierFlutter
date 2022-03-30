@@ -1,6 +1,3 @@
-import 'dart:ffi';
-import 'dart:math';
-
 import 'package:flutter_map/flutter_map.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
@@ -13,18 +10,25 @@ import 'package:reunionou/screens/event_map.dart';
 class UserCollection extends ChangeNotifier {
   String title = 'Reunionou';
   static String token = '';
+  static String access_token = '';
+  static List<dynamic> usersInvite = [];
+  static List<dynamic> participants = [];
+  static List<dynamic> participantsNon = [];
+  static List<dynamic> usersParticipe = [];
+  static List<dynamic> users = [];
   static List<dynamic> marker = [];
   static List<Marker> tab_markers = [];
   static List<dynamic> myEvents = [];
-  static String nom = 'achour';
-  static String prenom = 'mouloud';
-  static String mail = 'moulou@achour';
+  static String nom = '';
+  static String prenom = '';
+  static String mail = '';
   String id_createur = '';
   String nom_createur = '';
   String prenom_createur = '';
   String mail_createur = '';
   String id_event = '';
-  static String id = '9d6eb3c3-7bf6-4b7d-aa76-1422b112aa9d';
+
+  static String id = '';
   String libelleLieu = '';
   String libelle_event = '';
   String horaire = '';
@@ -34,10 +38,7 @@ class UserCollection extends ChangeNotifier {
   static double lat = 0.0;
   static double long = 0.0;
 
-  Lieu? selectedEvent;
-  bool eventSelected(int index) {
-    return selectedEvent == myEvents[index];
-  }
+  var selectedEvent;
 
   setLibelleLieu(String libel) {
     libelleLieu = libel;
@@ -51,6 +52,22 @@ class UserCollection extends ChangeNotifier {
 
   setHoraireEvent(String h) {
     horaire = h;
+    notifyListeners();
+  }
+
+  setStateUsers(index) {
+    users[index]['same'] = true;
+
+    notifyListeners();
+  }
+
+  setStateMarkers() {
+    marker = marker;
+    notifyListeners();
+  }
+
+  setStateComms() {
+    messages = messages;
     notifyListeners();
   }
 
@@ -83,10 +100,32 @@ class UserCollection extends ChangeNotifier {
   }
 
   logout() {
+    usersParticipe = [];
     nom = '';
     prenom = '';
     mail = '';
     id = '';
+    token = '';
+    access_token = '';
+    usersInvite = [];
+    participants = [];
+    users = [];
+    marker = [];
+    tab_markers = [];
+    myEvents = [];
+    id_createur = '';
+    nom_createur = '';
+    prenom_createur = '';
+    mail_createur = '';
+    id_event = '';
+    id = '';
+    libelleLieu = '';
+    libelle_event = '';
+    horaire = '';
+    date = '';
+    participe = '';
+    messages = [];
+    participantsNon = [];
     notifyListeners();
   }
 }

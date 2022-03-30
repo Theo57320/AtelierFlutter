@@ -40,221 +40,226 @@ class _EventCreateState extends State<EventCreate> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: 30.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // ignore: unnecessary_const
-              RichText(
-                text: TextSpan(
-                  text: 'Création d\'un événement\n'.toUpperCase(),
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 30.0,
+    return Consumer<UserCollection>(builder: (context, userCollection, child) {
+      return Scaffold(
+        appBar: AppBar(
+          title: const Text('Ajouter un evenement'),
+        ),
+        body: Center(
+          child: SingleChildScrollView(
+            padding: EdgeInsets.symmetric(horizontal: 30.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // ignore: unnecessary_const
+                RichText(
+                  text: TextSpan(
+                    text: 'Création d\'un événement\n'.toUpperCase(),
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 30.0,
+                    ),
+                    children: [
+                      TextSpan(
+                        text: 'Reunionou\n'.toUpperCase(),
+                        style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
                   ),
-                  children: [
-                    TextSpan(
-                      text: 'Reunionou\n'.toUpperCase(),
-                      style: TextStyle(
-                        color: Theme.of(context).primaryColor,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
                 ),
-              ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    Text(
-                      'Titre',
-                      style: TextStyle(
-                        fontStyle: FontStyle.italic,
+                Form(
+                  key: _formKey,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Text(
+                        'Titre',
+                        style: TextStyle(
+                          fontStyle: FontStyle.italic,
+                        ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    TextFormField(
-                      validator: (value) => EmailValidator.validate(value!)
-                          ? null
-                          : "Please enter a valid titre",
-                      decoration: InputDecoration(
-                        hintText: 'Ex: Anniversaire',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextFormField(
+                        validator: (value) => EmailValidator.validate(value!)
+                            ? null
+                            : "Entrez un titre",
+                        decoration: InputDecoration(
+                          hintText: 'Ex: Anniversaire',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(color: Colors.grey),
                           ),
                         ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
+                        controller: myControllerTitreEvent,
                       ),
-                      controller: myControllerTitreEvent,
-                    ),
-                    SizedBox(height: 10.0),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a Description';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Description',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      controller: myControllerDescription,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    CalendarDatePicker(
-                      firstDate: DateTime(2019),
-                      lastDate: DateTime(2030, 12, 12),
-                      initialDate: selectedDate,
-                      onDateChanged: (date) {
-                        setState(() {
-                          selectedDate = date;
-                        });
-                      },
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter a time';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Heure',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      controller: myControllerHeure,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    TextFormField(
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return 'Please enter an adresse';
-                        }
-                      },
-                      decoration: InputDecoration(
-                        hintText: 'Lieu',
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(0.0),
-                          borderSide: BorderSide(color: Colors.grey),
-                        ),
-                      ),
-                      controller: myControllerLieu,
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      onPressed: () {
-                        ApiCall.getCoo(myControllerLieu).then((value) {
-                          if (value == true) {
-                            ApiCall.addEvent(
-                                    myControllerTitreEvent.value.text,
-                                    selectedDate,
-                                    UserCollection.lat,
-                                    UserCollection.long,
-                                    myControllerLieu.value.text,
-                                    myControllerHeure.value.text)
-                                .then((value) {
-                              print(value);
-                              if (value == true) {
-                                Navigator.pushNamed(context, '/event_map');
-                                return ScaffoldMessenger.of(context)
-                                    .showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Created: Success')),
-                                );
-                              } else {
-                                return ScaffoldMessenger.of(context)
-                                    .showSnackBar(
-                                  const SnackBar(
-                                      content: Text(
-                                          'Created: Error try again and verify your values')),
-                                );
-                              }
-                            });
-                          } else {
-                            print('erreur adresse invalide');
+                      SizedBox(height: 10.0),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Entrez une description';
                           }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Description',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        controller: myControllerDescription,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      CalendarDatePicker(
+                        firstDate: DateTime(2019),
+                        lastDate: DateTime(2030, 12, 12),
+                        initialDate: selectedDate,
+                        onDateChanged: (date) {
+                          setState(() {
+                            selectedDate = date;
+                          });
+                        },
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Entrez une heure';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Heure',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        controller: myControllerHeure,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      TextFormField(
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Entrez une adresse';
+                          }
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Lieu',
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          focusedBorder: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(0.0),
+                            borderSide: BorderSide(color: Colors.grey),
+                          ),
+                        ),
+                        controller: myControllerLieu,
+                      ),
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        onPressed: () {
+                          ApiCall.getCoo(myControllerLieu).then((value) {
+                            if (value == true) {
+                              ApiCall.addEvent(
+                                      myControllerTitreEvent.value.text,
+                                      selectedDate,
+                                      UserCollection.lat,
+                                      UserCollection.long,
+                                      myControllerLieu.value.text,
+                                      myControllerHeure.value.text)
+                                  .then((value) {
+                                userCollection.setStateMarkers();
+                                if (value == true) {
+                                  Navigator.pushNamed(context, '/event_map');
+                                  return ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                        content: Text('Creation réussite')),
+                                  );
+                                } else {
+                                  return ScaffoldMessenger.of(context)
+                                      .showSnackBar(
+                                    const SnackBar(
+                                        content:
+                                            Text('Erreur verifier la saisie')),
+                                  );
+                                }
+                              });
+                            } else {
+                              print('erreur adresse invalide');
+                            }
+                            ;
+                          });
                           ;
-                        });
-                        ;
-                      },
-                      child: Text(
-                        'creer'.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
+                        },
+                        child: Text(
+                          'creer'.toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    SizedBox(
-                      height: 10.0,
-                    ),
-                    RaisedButton(
-                      color: Theme.of(context).primaryColor,
-                      elevation: 0,
-                      padding: EdgeInsets.symmetric(vertical: 15.0),
-                      onPressed: () =>
-                          Navigator.pushNamed(context, '/event_map'),
-                      //http://api.positionstack.com/v1/forward?access_key=01ba22585ec570b67b6ce941657cade1&query=1600 Pennsylvania Ave NW, Washington DC
-                      child: Text(
-                        'annuler'.toUpperCase(),
-                        style: TextStyle(
-                          color: Colors.white,
+                      SizedBox(
+                        height: 10.0,
+                      ),
+                      RaisedButton(
+                        color: Theme.of(context).primaryColor,
+                        elevation: 0,
+                        padding: EdgeInsets.symmetric(vertical: 15.0),
+                        onPressed: () =>
+                            Navigator.pushNamed(context, '/event_map'),
+                        //http://api.positionstack.com/v1/forward?access_key=01ba22585ec570b67b6ce941657cade1&query=1600 Pennsylvania Ave NW, Washington DC
+                        child: Text(
+                          'annuler'.toUpperCase(),
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
